@@ -4,14 +4,6 @@ CREATE DATABASE IF NOT EXISTS inventoryDB;
 -- Use the newly created database
 USE inventoryDB;
 
--- Drop existing tables if they exist
-DROP TABLE IF EXISTS warehouses;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS suppliers;
-DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS stock_levels;
-DROP TABLE IF EXISTS stock_movements;
-
 -- Create warehouses table (1-M relationship with employees)
 CREATE TABLE warehouses (
     warehouse_id INT AUTO_INCREMENT PRIMARY KEY,

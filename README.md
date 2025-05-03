@@ -1,131 +1,68 @@
-# Final-Db-Assignment
-# Question 1: Build a Complete Database Management System
-Use Case: Inventory Tracking System
-In this use case, we will design a relational database for an Inventory Tracking System that tracks products, suppliers, stock levels, warehouses, and employees.
+# Inventory Tracking System
 
-# Question 2: Create a Simple CRUD API Using MySQL + Programming
-Use Case: Inventory Tracking CRUD API
-For the second part of the assignment, we will create a Node.js and Express API that interfaces with the Inventory Tracking System database. The API will include endpoints for CRUD operations on products.
+## Project Description
+The **Inventory Tracking System** is a Node.js-based API designed to manage inventory data for warehouses, products, suppliers, employees, and stock movements. It provides endpoints to create, read, update, and delete inventory-related data, enabling efficient tracking of stock levels and movements across multiple warehouses.
 
-1. Backend Setup (Node.js + Express)
-# Step 1: Install Dependencies
-First, initialize the Node.js project and install the necessary dependencies:
+The project uses a MySQL database to store inventory data and follows a relational database design. The database schema includes tables for warehouses, products, suppliers, employees, stock levels, and stock movements.
 
-npm init -y
-npm install express mysql2 body-parser
+## Features
+- Manage products, warehouses, suppliers, and employees.
+- Track stock levels and movements (inflow and outflow).
+- RESTful API endpoints for CRUD operations.
+- Relational database design with foreign key constraints.
 
-# Step 2: Project Structure
-inventory-tracking-api/
-├── server.js             # Main server file
-├── config/               # Configuration files
-│   └── db.js             # MySQL database connection file
-├── routes/               # Route files
-│   └── productRoutes.js  # Routes for managing products
-└── .gitignore            # Git ignore file
+## How to Run/Setup the Project
 
-# Step 3: MySQL Database Connection (config/db.js)
-const mysql = require('mysql2');
+### Prerequisites
+1. Install [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/).
+2. Install [MySQL](https://www.mysql.com/).
 
-// Create a connection to the database
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'yourpassword',
-  database: 'inventoryDB'
-});
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd Final-Db-Assignment
+   ```
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
-  }
-  console.log('Connected to the database');
-});
+2. Install dependencies:
+   ```bash
+   cd inventory-tracking-api
+   npm install
+   ```
 
-module.exports = connection;
+3. Set up the database:
+   - Open the `inventory_system.sql` file located in the root directory.
+   - Import the SQL file into your MySQL server:
+     ```bash
+     mysql -u root -p < inventory_system.sql
+     ```
+   - Ensure the database is created and populated with sample data.
 
-# Step 4: API Routes for Products (routes/productRoutes.js)
+4. Configure the database connection:
+   - Open db.js.
+   - Update the `host`, `user`, `password`, and `database` fields with your MySQL credentials.
 
-const express = require('express');
-const router = express.Router();
-const db = require('../config/db');
+5. Start the server:
+   ```bash
+   node server.js
+   ```
+   The server will run on `http://localhost:3000` by default.
 
-// Create a new product
-router.post('/products', (req, res) => {
-  const { product_name, product_description, price } = req.body;
-  const query = 'INSERT INTO products (product_name, product_description, price) VALUES (?, ?, ?)';
-  db.query(query, [product_name, product_description, price], (err, result) => {
-    if (err) throw err;
-    res.send('Product created successfully');
-  });
-});
+6. Test the API:
+   - Use tools like [Postman](https://www.postman.com/) or [cURL](https://curl.se/) to test the API endpoints.
 
-// Get all products
-router.get('/products', (req, res) => {
-  const query = 'SELECT * FROM products';
-  db.query(query, (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
-});
+### API Endpoints
+- **POST** `/api/products` - Create a new product.
+- **GET** `/api/products` - Retrieve all products.
+- **PUT** `/api/products/:id` - Update a product by ID.
+- **DELETE** `/api/products/:id` - Delete a product by ID.
 
-// Update a product
-router.put('/products/:id', (req, res) => {
-  const { id } = req.params;
-  const { product_name, product_description, price } = req.body;
-  const query = 'UPDATE products SET product_name = ?, product_description = ?, price = ? WHERE product_id = ?';
-  db.query(query, [product_name, product_description, price, id], (err, result) => {
-    if (err) throw err;
-    res.send('Product updated successfully');
-  });
-});
+## Entity-Relationship Diagram (ERD)
+Below is the ERD for the database schema:
 
-// Delete a product
-router.delete('/products/:id', (req, res) => {
-  const { id } = req.params;
-  const query = 'DELETE FROM products WHERE product_id = ?';
-  db.query(query, [id], (err, result) => {
-    if (err) throw err;
-    res.send('Product deleted successfully');
-  });
-});
+![ERD](https://drive.google.com/file/d/19WTt-qN0NhRMiKMUfgGKgm0fHqmjAIzy/view?usp=sharing)
 
-module.exports = router;
+Alternatively, you can find the ERD in the project documentation or generate it using tools like MySQL Workbench.
 
-
-# Step 5: Main Server File (server.js)
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const productRoutes = require('./routes/productRoutes');
-
-app.use(bodyParser.json()); // Parse JSON request bodies
-
-// Use the product routes
-app.use('/api', productRoutes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-
-# How to Run/Setup the API
-Clone the repository and open it in your terminal.
-
-Run npm install to install the necessary dependencies.
-
-Ensure that MySQL is running, and the database inventoryDB is set up with the provided inventory_system.sql.
-
-Start the server with the command: node server.js.
-
-Use Postman or curl to interact with the API. The API has the following routes:
-
-POST /api/products: Create a new product.
-
-GET /api/products: Fetch all products.
-
-PUT /api/products/:id: Update a product by ID.
-
-DELETE /api/products/:id: Delete a product by ID.
+## License
+This project is open-source and available for use under the MIT License.
